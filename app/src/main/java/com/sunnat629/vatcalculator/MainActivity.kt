@@ -14,15 +14,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import com.sunnat629.vatcalculator.databinding.ActivityMainBinding
 import com.sunnat629.vatcalculator.model.RatesEnum
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.toast
 
+
 class MainActivity : AppCompatActivity() {
+
+    private var connectivityDisposable: Disposable? = null
+    private var internetDisposable: Disposable? = null
+    private val TAG = "ReactiveNetwork"
 
     private lateinit var mainViewModel: MainViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,21 +46,48 @@ class MainActivity : AppCompatActivity() {
                 this.viewModel = mainViewModel
             }
 
+        fetchRawData()
         exclVatAmountObserve()
         setSpinner()
+//        checkConnectivity()
+    }
+
+    private fun fetchRawData() {
+        GlobalScope.launch(Dispatchers.Main){
+            mainViewModel.rawData = mainViewModel.fetchData()
+        }
+    }
+
+    private fun checkConnectivity() {
+        connectivityDisposable = ReactiveNetwork.observeNetworkConnectivity(applicationContext)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { connectivity ->
+                Log.d(TAG, connectivity.toString())
+                val state = connectivity.state()
+                val name = connectivity.typeName()
+                connectivity_status.text = String.format("state: %s, typeName: %s", state, name)
+            }
+
+        internetDisposable = ReactiveNetwork.observeInternetConnectivity()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { isConnectedToInternet ->
+                internet_status.text = isConnectedToInternet.toString()
+            }
     }
 
     private fun exclVatAmountObserve() {
-        mainViewModel.exclVatAmount.observe(this, Observer {
-            label_effective_from.text = it
-        })
+//        mainViewModel.exclVatAmount.observe(this, Observer {
+//            label_effective_from.text = it
+//        })
     }
 
     // set Country in spinner
     private fun setSpinner() {
         GlobalScope.launch(Dispatchers.Main) {
             // country is in observation if it changes or not
-            mainViewModel.fetchAllCountry().observe(this@MainActivity, Observer {
+            mainViewModel.fetchAllCountries().observe(this@MainActivity, Observer {
                 val adapter = ArrayAdapter(this@MainActivity, android.R.layout.simple_spinner_item, it)
                 countrySpinner.adapter = adapter
             })
@@ -60,7 +96,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                     // VAT rate changes based on selected country
                     GlobalScope.launch(Dispatchers.Main) {
-                        val country = mainViewModel.fetchAllCountry().value?.get(position)
+                        val country = mainViewModel.fetchAllCountries().value?.get(position)
                         country?.let { getOneRate(it) }
                         toast(country.toString())
                     }

@@ -9,7 +9,7 @@
     <string name="country">Country</string>
     <string name="label_vat_rate">VAT Rate</string>
     <string name="effective_from">Effective From</string>
-    <string name="label_calculate">Calculate</string>
+    <string name="label_reset">Reset</string>
     <string name="vat_rate">%1$s%% (%2$s)</string>
     <string name="vat">VAT</string>
 </resources>

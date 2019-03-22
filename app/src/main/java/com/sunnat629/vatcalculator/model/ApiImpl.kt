@@ -7,7 +7,8 @@ import com.sunnat629.vatcalculator.utils.Constance.TAG_APIIMPL
 
 object ApiImpl {
     private val service = RetrofitFactory.makeRetrofitService()
-    private suspend fun call(): List<Rate> {
+
+    private suspend fun fetchData(): List<Rate> {
         val request = service.getJSonVATAsync()
         val response = request.await()
 
@@ -21,6 +22,6 @@ object ApiImpl {
     }
 
     suspend fun fetchRates(): MutableList<Rate> {
-        return call().toMutableList()
+        return fetchData().toMutableList()
     }
 }
