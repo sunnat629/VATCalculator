@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">VAT Calculator</string>
+    <string name="label_price_excluding_vat">Price excluding VAT</string>
+    <string name="label_price_including_vat">Price including VAT</string>
+
+
+    <string name="price_excluding_vat">Excluding VAT</string>
+    <string name="price_including_vat">Including VAT</string>
+    <string name="country">Country</string>
+    <string name="label_vat_rate">VAT Rate</string>
+    <string name="effective_from">Effective From</string>
+    <string name="label_calculate">Calculate</string>
+    <string name="vat_rate">%1$s%% (%2$s)</string>
+    <string name="vat">VAT</string>
 </resources>
