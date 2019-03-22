@@ -47,7 +47,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         fetchRawData()
-        exclVatAmountObserve()
         setSpinner()
 //        checkConnectivity()
     }
@@ -58,30 +57,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkConnectivity() {
-        connectivityDisposable = ReactiveNetwork.observeNetworkConnectivity(applicationContext)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { connectivity ->
-                Log.d(TAG, connectivity.toString())
-                val state = connectivity.state()
-                val name = connectivity.typeName()
-                connectivity_status.text = String.format("state: %s, typeName: %s", state, name)
-            }
-
-        internetDisposable = ReactiveNetwork.observeInternetConnectivity()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { isConnectedToInternet ->
-                internet_status.text = isConnectedToInternet.toString()
-            }
-    }
-
-    private fun exclVatAmountObserve() {
-//        mainViewModel.exclVatAmount.observe(this, Observer {
-//            label_effective_from.text = it
-//        })
-    }
 
     // set Country in spinner
     private fun setSpinner() {
