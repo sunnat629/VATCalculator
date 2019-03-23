@@ -11,7 +11,7 @@ With the given API of [jsonvat](https://jsonvat.com/), I got a json of VAT conve
 
 - **Android KTX**: JetPack component and this Full app is fully developed by Kotlin Language.
 - **androidx**: One of the components of JetPack. It replaces the Support Android libs and added more features and flexibilities.
-- **Material Deign**: This app is in 100% material design based app with androidx and android.material based UI elements.
+- **Material Deign**: This app is in 100% material design based app. I used androidx and android.material based UI elements.
 - **ViewModel**: I used the MVVM architecture in this app
 - **Kotlin Coroutines**: Used to fetch REST API data asynchronously and manage the background thread in easier way.
 - **Two ways Databinding**: It bind observable data to UI elements and Get from UI and Set to UI
@@ -24,7 +24,7 @@ With the given API of [jsonvat](https://jsonvat.com/), I got a json of VAT conve
 - **Glide**: To handle gif file
 
 - **Fonts in XML**: I used it to change the font of the displayed textView (working only API level 26 or higher)
-- **Translatable**: I haved used all the string from the resource file so that this app can be translated with any language without any harass.
+- **Translatable**: I have used all the string from the resource file so that this app can be translated with any language without any hassle.
 - **Different Screen Size**: supported 
 
 
