@@ -1,15 +1,20 @@
 package com.sunnat629.vatcalculator
 
 import android.app.Application
+import android.util.Log
 import androidx.databinding.Bindable
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.sunnat629.vatcalculator.model.NonNullMediatorLiveData
 import com.sunnat629.vatcalculator.model.RatesEnum
-import com.sunnat629.vatcalculator.model.entities.Calculate
 import com.sunnat629.vatcalculator.model.entities.Rate
+import com.sunnat629.vatcalculator.model.network.NetworkResult
+import com.sunnat629.vatcalculator.utils.Calculate
+import com.sunnat629.vatcalculator.utils.Constance
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
+
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -18,23 +23,31 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         get() = parentJob + Dispatchers.Main
     private val scope = CoroutineScope(coroutineContext)
 
+    private val _rawData = NonNullMediatorLiveData<List<Rate>>()
+    val rawData: LiveData<List<Rate>>
+        get() = _rawData
 
+    private val _error = NonNullMediatorLiveData<String>()
+    val error: LiveData<String>
+        get() = _error
 
-    var rawData: MutableList<Rate> = mutableListOf()
-
-    fun fetchData(): MutableList<Rate>{
-        var a:  MutableList<Rate> = mutableListOf()
-        runBlocking {
-            a = withContext(scope.coroutineContext + Dispatchers.IO) {
-                Calculate.getData()
+    private fun getRawData() {
+        parentJob = scope.launch {
+            val result = Calculate.getData()
+            when (result) {
+                is NetworkResult.Success -> _rawData.postValue(result.data)
+                is NetworkResult.Error -> _error.postValue(result.exception.message)
             }
         }
-        return a
+    }
+
+    init {
+        getRawData()
     }
 
     fun fetchAllCountries(): LiveData<List<String>> {
         val allCountryLiveData = MutableLiveData<List<String>>()
-        allCountryLiveData.value = Calculate.countryList(rawData)
+        allCountryLiveData.value = Calculate.countryList(rawData.value!!)
         return allCountryLiveData
     }
 
@@ -48,7 +61,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
 
     fun getPeriodsRateByCountry(country: String): List<Pair<RatesEnum, Double>> {
-        return Calculate.getPeriodsRateByCountry(rawData, country)
+        return Calculate.getPeriodsRateByCountry(rawData.value!!, country)
     }
 
     val inclVatAmount: LiveData<String>
@@ -60,11 +73,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         @Bindable(value = ["radioVatRate", "exclVatAmount"])
         get() = Calculate.getVatByAmount(radioVatRate, exclVatAmount)
 
-    fun clearAll() {
+
+    fun reset() {
         exclVatAmount.value = "0"
     }
+    fun retry() {
+        getRawData()
+    }
 
-    fun getNetworkConnectivity(){
-
+    override fun onCleared() {
+        super.onCleared()
+        parentJob.cancel()
     }
 }

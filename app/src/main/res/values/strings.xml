@@ -12,4 +12,6 @@
     <string name="label_reset">Reset</string>
     <string name="vat_rate">%1$s%% (%2$s)</string>
     <string name="vat">VAT</string>
+    <string name="no_network">No Network Connection</string>
+    <string name="retry">Retry</string>
 </resources>

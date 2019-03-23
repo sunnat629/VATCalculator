@@ -1,6 +1,9 @@
 package com.sunnat629.vatcalculator
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -14,12 +17,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import com.sunnat629.vatcalculator.databinding.ActivityMainBinding
+import com.sunnat629.vatcalculator.databinding.ActivityMainNoNetworkBinding
 import com.sunnat629.vatcalculator.model.RatesEnum
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -29,9 +29,6 @@ import org.jetbrains.anko.toast
 
 class MainActivity : AppCompatActivity() {
 
-    private var connectivityDisposable: Disposable? = null
-    private var internetDisposable: Disposable? = null
-    private val TAG = "ReactiveNetwork"
 
     private lateinit var mainViewModel: MainViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,26 +37,27 @@ class MainActivity : AppCompatActivity() {
         mainViewModel = ViewModelProviders.of(this)
             .get(MainViewModel::class.java)
 
-        DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
-            .apply {
-                this.lifecycleOwner = this@MainActivity
-                this.viewModel = mainViewModel
-            }
+        mainViewModel.rawData.observe(this@MainActivity, Observer {
+            DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+                .apply {
+                    this.lifecycleOwner = this@MainActivity
+                    this.viewModel = mainViewModel
+                }
+            setSpinner()
+        })
 
-        fetchRawData()
-        setSpinner()
-//        checkConnectivity()
+        mainViewModel.error.observe(this@MainActivity, Observer {
+            DataBindingUtil.setContentView<ActivityMainNoNetworkBinding>(this, R.layout.activity_main_no_network)
+                .apply {
+                    this.lifecycleOwner = this@MainActivity
+                    this.viewModel = mainViewModel
+                }
+        })
     }
-
-    private fun fetchRawData() {
-        GlobalScope.launch(Dispatchers.Main){
-            mainViewModel.rawData = mainViewModel.fetchData()
-        }
-    }
-
 
     // set Country in spinner
     private fun setSpinner() {
+
         GlobalScope.launch(Dispatchers.Main) {
             // country is in observation if it changes or not
             mainViewModel.fetchAllCountries().observe(this@MainActivity, Observer {
@@ -106,7 +104,7 @@ class MainActivity : AppCompatActivity() {
                 myRadioButton.text = this.getString(
                     R.string.vat_rate,
                     rates[radioButton].second.toString(),
-                    rates[radioButton].first
+                    rates[radioButton].first.toString().toLowerCase()
                 )
                 myRadioButton.id = radioButton
                 radioGroup.addView(myRadioButton)
@@ -124,5 +122,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 }

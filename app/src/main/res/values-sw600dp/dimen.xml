@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="no_net_image_size">300dp</dimen>
+    <dimen name="button_font_size">22sp</dimen>
+
+</resources>

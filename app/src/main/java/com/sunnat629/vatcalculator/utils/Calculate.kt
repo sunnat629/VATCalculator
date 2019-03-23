@@ -1,20 +1,25 @@
-package com.sunnat629.vatcalculator.model.entities
+package com.sunnat629.vatcalculator.utils
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.sunnat629.vatcalculator.model.Api
 import com.sunnat629.vatcalculator.model.ApiImpl
 import com.sunnat629.vatcalculator.model.RatesEnum
+import com.sunnat629.vatcalculator.model.entities.Period
+import com.sunnat629.vatcalculator.model.entities.Rate
+import com.sunnat629.vatcalculator.model.network.NetworkResult
 
 
 object Calculate {
 
-    var rawData: MutableList<Rate> = mutableListOf()
+    var rawData: List<Rate> = listOf()
 
-    suspend fun getData():MutableList<Rate> {
+    suspend fun getData(): NetworkResult<List<Rate>> {
         return ApiImpl.fetchRates()
     }
 
-    fun countryList(rawData:  MutableList<Rate>): List<String> {
+    fun countryList(rawData:  List<Rate>): List<String> {
         return rawData.flatMap { listOf(it.name) }.sortedBy { it }
     }
 
@@ -28,9 +33,9 @@ object Calculate {
         return periods
     }
 
-    fun getPeriodsRateByCountry(rawData: MutableList<Rate>, country: String)
+    fun getPeriodsRateByCountry(rawData: List<Rate>, country: String)
             : List<Pair<RatesEnum, Double>> {
-        this.rawData = rawData
+        Calculate.rawData = rawData
         val rates = getPeriodsByCountry(country)!![0].rates
         return listOf(
             Pair(RatesEnum.STANDARD, rates.standard),
@@ -44,7 +49,7 @@ object Calculate {
 
     fun getIncludingVatAmount(inputVat: LiveData<String>, exclVatAmount: MutableLiveData<String>?): LiveData<String> {
         val output = MutableLiveData<String>()
-        if (isAppStart(inputVat,exclVatAmount)){
+        if (isAppStart(inputVat, exclVatAmount)){
             output.value = (inputVat.value!!.toDouble() + exclVatAmount?.value!!.toDouble()).toString()
         }
         return output
@@ -52,12 +57,11 @@ object Calculate {
 
     fun getVatByAmount(inputVat: MutableLiveData<String>?, exclVatAmount: MutableLiveData<String>?): LiveData<String> {
         val output = MutableLiveData<String>()
-        if (isAppStart(inputVat!!,exclVatAmount)){
+        if (isAppStart(inputVat!!, exclVatAmount)){
             output.value = ((inputVat.value!!.toDouble() * exclVatAmount?.value!!.toDouble()) / 100).toString()
         }
         return output
     }
-
 
     // when the app will start the values of the inputVAT and exclVatAmount will be null, so this function will handle it
     private fun isAppStart(inputVat: LiveData<String>, exclVatAmount: MutableLiveData<String>?): Boolean {
