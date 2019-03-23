@@ -1,7 +1,5 @@
 package com.sunnat629.vatcalculator.model.entities
 
-import java.time.Period
-
 /**
  * Fetch the raw data
  * */

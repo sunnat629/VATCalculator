@@ -46,7 +46,7 @@ object Calculate {
      * @param country is the specific country
      * */
     private fun getPeriodsByCountry(country: String): List<Period>? {
-        val periods = getRateByCountry(country)!!.periods
+        val periods: List<Period> = getRateByCountry(country)!!.periods
         // from this sorted based on effective_from will help us to find the latest VAT rate
         periods.sortedBy { it.effective_from }
         return periods
