@@ -1,6 +1,10 @@
 package com.sunnat629.vatcalculator.model.entities
 
+import java.time.Period
 
+/**
+ * Fetch the raw data
+ * */
 data class JSonVAT(
     var details: String,
     var version: Int,
@@ -10,6 +14,9 @@ data class JSonVAT(
     }
 }
 
+/**
+ * Fetch the rates details list of all the countries
+ * */
 data class Rate(
     var name: String,
     var code: String,
@@ -20,7 +27,10 @@ data class Rate(
     }
 }
 
-class Period(
+/**
+ * Fetch the Period list of a specific country
+ * */
+data class Period(
     var effective_from: String,
     var rates: Rates) {
     override fun toString(): String {
@@ -28,7 +38,10 @@ class Period(
     }
 }
 
-class Rates(
+/**
+ * Fetch the VAT rates based on Period
+ * */
+data class Rates(
     var super_reduced: Double,
     var reduced: Double,
     var standard: Double,

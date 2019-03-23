@@ -22,8 +22,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-
-
 class MainActivity : AppCompatActivity() {
     private lateinit var mainViewModel: MainViewModel
 
@@ -44,6 +42,7 @@ class MainActivity : AppCompatActivity() {
      * or, if there is no internet connectivity or any other error, it will go with @error
      * */
     private fun fetchRawDataOrHandleNetwork() {
+        // When the fetched data is completed then it will start to observe this 'rawData' and bind with the 'activity_main layout' and 'mainViewModel'
         mainViewModel.rawData.observe(this@MainActivity, Observer {
             DataBindingUtil.setContentView<ActivityMainBinding>(this,
                 com.sunnat629.vatcalculator.R.layout.activity_main
@@ -52,9 +51,11 @@ class MainActivity : AppCompatActivity() {
                     this.lifecycleOwner = this@MainActivity
                     this.viewModel = mainViewModel
                 }
+            mainViewModel.exclVatAmount.value = "0"
             setSpinner()
         })
 
+        // When the fetched data is completed then it will start to observe this 'error' and bind with the 'activity_main_no_network' layout and 'mainViewModel'
         mainViewModel.error.observe(this@MainActivity, Observer {
             DataBindingUtil.setContentView<ActivityMainNoNetworkBinding>(this,
                 com.sunnat629.vatcalculator.R.layout.activity_main_no_network
@@ -66,7 +67,10 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    // set Country in spinner
+    /**
+     * Set Country in spinner and 'launch' is suspending block
+     * 'Dispatchers.Main' is a coroutine dispatcher that is confined to the Main thread operating with UI objects
+     * */
     private fun setSpinner() {
         GlobalScope.launch(Dispatchers.Main) {
             // country is in observation if it changes or not
@@ -91,7 +95,9 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    // fetch rates based on Country
+    /**
+     * fetch rates based on Country
+     **/
     private fun getOneRate(country: String) {
         GlobalScope.launch(Dispatchers.Main) {
             val rates = mainViewModel.getPeriodsRateByCountry(country)
@@ -99,7 +105,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // create Radio Button based on Country
+    /**
+     * create dynamic Radio Buttons based on Country Rate types
+     **/
     @SuppressLint("ResourceType")
     private fun createRadioButton(rates: List<Pair<RatesEnum, Double>>) {
         radioGroup.clearCheck()
