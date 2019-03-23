@@ -7,9 +7,9 @@ import retrofit2.Response
 import retrofit2.http.GET
 
 /**
- * In this Api interface, we will create the endpoint functions
+ * In this an Api interface, we will create all the endpoint functions
  * */
-interface Api{
+interface Api {
     /**
      * This endpoint will help to get the Raw Data from the server.
      * Here we will have use Deferred<T>. Deferred<T> mainly uses with 'await' suspending function.

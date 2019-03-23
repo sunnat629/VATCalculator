@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable name="viewModel" type="com.sunnat629.vatcalculator.viewmodel.MainViewModel"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background"
+            tools:context=".ui.MainActivity">
+
+        <include android:id="@+id/layout_toolbar"
+                 layout="@layout/layout_toolbar"
+                 app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                 app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+                android:text="@string/fetching_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Title"
+                android:id="@+id/textView" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/fetchingImage"
+                app:layout_constraintVertical_bias="0.0"/>
+
+        <ImageView
+                android:layout_width="@dimen/no_net_image_size"
+                android:layout_height="@dimen/no_net_image_size" app:srcCompat="@drawable/ic_no_network_big"
+                android:id="@+id/fetchingImage"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/layout_toolbar"
+                app:layout_constraintVertical_bias="0.3"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

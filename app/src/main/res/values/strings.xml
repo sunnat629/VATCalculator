@@ -1,17 +1,25 @@
 <resources>
     <string name="app_name">VAT Calculator</string>
+
     <string name="label_price_excluding_vat">Price excluding VAT</string>
     <string name="label_price_including_vat">Price including VAT</string>
-
-
-    <string name="price_excluding_vat">Excluding VAT</string>
-    <string name="price_including_vat">Including VAT</string>
-    <string name="country">Country</string>
+    <string name="label_vat">VAT</string>
+    <string name="label_country">Country</string>
     <string name="label_vat_rate">VAT Rate</string>
-    <string name="effective_from">Effective From</string>
-    <string name="label_reset">Reset</string>
+
+    <string name="price_excluding_vat">Input the Amount</string>
+    <string name="price_including_vat">Including VAT</string>
+
+    <string name="button_reset">Reset</string>
+    <string name="button_retry">Retry</string>
+
+    <string name="reset_value">0</string>
     <string name="vat_rate">%1$s%% (%2$s)</string>
-    <string name="vat">VAT</string>
+
     <string name="no_network">No Network Connection</string>
-    <string name="retry">Retry</string>
+    <string name="successful">The Data is fetched successfully.</string>
+    <string name="error">There is an error during fetch the data. Please check the internet connectivity and try
+        again.
+    </string>
+    <string name="fetching_data">Fetching Data...</string>
 </resources>

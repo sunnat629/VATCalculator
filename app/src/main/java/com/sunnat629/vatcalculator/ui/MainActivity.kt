@@ -13,11 +13,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.sunnat629.vatcalculator.databinding.ActivityMainBinding
-import com.sunnat629.vatcalculator.databinding.ActivityMainNoNetworkBinding
+import com.bumptech.glide.Glide
+import com.sunnat629.vatcalculator.R
+import com.sunnat629.vatcalculator.databinding.ActivityMainFetchingBinding
 import com.sunnat629.vatcalculator.model.RatesEnum
 import com.sunnat629.vatcalculator.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main_fetching.*
 import kotlinx.android.synthetic.main.layout_toolbar.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -30,43 +32,57 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setSupportActionBar(toolbar)
 
+        DataBindingUtil.setContentView<ActivityMainFetchingBinding>(
+            this,
+            com.sunnat629.vatcalculator.R.layout.activity_main_fetching
+        )
+
         // access the viewModel to control the UI
         mainViewModel = ViewModelProviders.of(this)
             .get(MainViewModel::class.java)
 
-        fetchRawDataOrHandleNetwork()
+        Glide.with(this).load(resources.getDrawable(R.drawable.fetching, null)).into(fetchingImage)
+
+//        fetchRawRateDataOrHandleNetwork()
 
     }
 
     /**
-     * If there is no problem during fetch the data, then it will go with @rawData
+     * If there is no problem during fetch the data, then it will go with @rawRateData
      * or, if there is no internet connectivity or any other error, it will go with @error
      * */
-    private fun fetchRawDataOrHandleNetwork() {
-        // When the fetched data is completed then it will start to observe this 'rawData' and bind with the 'activity_main layout' and 'mainViewModel'
-        mainViewModel.rawData.observe(this@MainActivity, Observer {
-            DataBindingUtil.setContentView<ActivityMainBinding>(this,
-                com.sunnat629.vatcalculator.R.layout.activity_main
-            )
-                .apply {
-                    this.lifecycleOwner = this@MainActivity
-                    this.viewModel = mainViewModel
-                }
-            mainViewModel.exclVatAmount.value = "0"
-            setSpinner()
-        })
-
-        // When the fetched data is completed then it will start to observe this 'error' and bind with the 'activity_main_no_network' layout and 'mainViewModel'
-        mainViewModel.error.observe(this@MainActivity, Observer {
-            DataBindingUtil.setContentView<ActivityMainNoNetworkBinding>(this,
-                com.sunnat629.vatcalculator.R.layout.activity_main_no_network
-            )
-                .apply {
-                    this.lifecycleOwner = this@MainActivity
-                    this.viewModel = mainViewModel
-                }
-        })
-    }
+//    private fun fetchRawRateDataOrHandleNetwork() {
+//        // When the fetched data is completed then it will start to observe this 'rawRateData' and bind with the 'activity_main layout' and 'mainViewModel'
+//        mainViewModel.rawRateData.observe(this@MainActivity, Observer {
+//            DataBindingUtil.setContentView<ActivityMainBinding>(
+//                this,
+//                com.sunnat629.vatcalculator.R.layout.activity_main
+//            )
+//                .apply {
+//                    this.lifecycleOwner = this@MainActivity
+//                    this.viewModel = mainViewModel
+//                }
+//
+//            Log.i(TAG_MAIN_ACTIVITY, resources.getString(R.string.successful))
+//            mainViewModel.exclVatAmount.value = resources.getString(R.string.reset_value)
+//            setSpinner()
+//        })
+//
+//        // When the fetched data is completed then it will start to observe this 'error' and bind with the 'activity_main_no_network' layout and 'mainViewModel'
+//        mainViewModel.error.observe(this@MainActivity, Observer {
+//            DataBindingUtil.setContentView<ActivityMainNoNetworkBinding>(
+//                this,
+//                com.sunnat629.vatcalculator.R.layout.activity_main_no_network
+//            )
+//                .apply {
+//                    this.lifecycleOwner = this@MainActivity
+//                    this.viewModel = mainViewModel
+//                }
+//            Log.e(TAG_MAIN_ACTIVITY, resources.getString(R.string.error))
+//            toast(resources.getString(R.string.error))
+//
+//        })
+//    }
 
     /**
      * Set Country in spinner and 'launch' is suspending block

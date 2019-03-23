@@ -1,10 +1,9 @@
 package com.sunnat629.vatcalculator.viewmodel
 
-import android.app.Application
 import androidx.databinding.Bindable
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.sunnat629.vatcalculator.model.NonNullMediatorLiveData
 import com.sunnat629.vatcalculator.model.RatesEnum
 import com.sunnat629.vatcalculator.model.entities.Rate
@@ -19,30 +18,35 @@ import kotlin.coroutines.CoroutineContext
 /**
  * This is the viewModel of the MainActivity class
  * */
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+class MainViewModel : ViewModel() {
 
+    // Creating the Job variable
     private var parentJob = Job()
+
+    // Creating the CoroutineContext variable and it uses the parentJob and the main dispatcher
     private val coroutineContext: CoroutineContext
         get() = parentJob + Dispatchers.Main
+
+    // Creating the CoroutineScope variable based on coroutineContext
     private val scope = CoroutineScope(coroutineContext)
 
     /**
      * These two NonNullMediatorLiveData variables are using to get a NonNull safe value
      * */
-    private val _rawData = NonNullMediatorLiveData<List<Rate>>()
+    private val _rawRateData = NonNullMediatorLiveData<List<Rate>>()
     private val _error = NonNullMediatorLiveData<String>()
 
     /**
-     * These two LiveData variables are using to get the '_rawData' and '_error' and publicly.
+     * These two LiveData variables are using to get the '_rawRateData' and '_error' and publicly.
      * It helps to protect our immutable objects.
      * */
-    val rawData: LiveData<List<Rate>>
-        get() = _rawData
+    val rawRateData: LiveData<List<Rate>>
+        get() = _rawRateData
     val error: LiveData<String>
         get() = _error
 
     /**
-     * This is a MutableLiveData variable of 'Including Vat Amount' amount based on 'Excluding Vat Amount' and 'VAT'.
+     * This is a MutableLiveData variable of 'Including VAT Amount' amount based on 'Excluding VAT Amount' and 'VAT'.
      * It is a an two-way dataBinding property because it can get the value from the EditText
      * and also shows the value in the EditText.
      * */
@@ -55,8 +59,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     @Bindable
     val radioVatRate = MutableLiveData<String>()
 
-   /**
-     * This is a LiveData variable of 'Including Vat Amount' amount based on 'Excluding Vat Amount' and 'VAT'.
+    /**
+     * This is a LiveData variable of 'Including VAT Amount' amount based on 'Excluding VAT Amount' and 'VAT'.
      * It is a an one-way dataBinding property because it only shows the value
      * */
     val inclVatAmount: LiveData<String>
@@ -64,7 +68,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         get() = Calculate.getIncludingVatAmount(vatByAmount, exclVatAmount)
 
     /**
-     * This is a LiveData variable of 'VAT' amount based on 'Excluding Vat Amount' and 'VAT Rate'.
+     * This is a LiveData variable of 'VAT' amount based on 'Excluding VAT Amount' and 'VAT Rate'.
      * It is a an one-way dataBinding property because it only shows the value
      * */
     val vatByAmount: LiveData<String>
@@ -74,25 +78,25 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     /**
      * To execute a suspending function, we need a suspend block and 'launch' is a suspending block.
      * It launches the the coroutine without blocking the main or current thread and returns a 'Job' reference.
-     * Here if the return result is Success, then it post the rawData to '_rawData'
+     * Here if the return result is Success, then it post the rawRateData to '_rawRateData'
      * Or, if there is any error, it will post the error message to '_error'
      * */
-    private fun getRawData() {
+    private fun getRawRateData() {
         parentJob = scope.launch {
-            val result = Calculate.getData()
+            val result = Calculate.fetchRateData()
             when (result) {
-                is NetworkResult.Success -> _rawData.postValue(result.data)
+                is NetworkResult.Success -> _rawRateData.postValue(result.data)
                 is NetworkResult.Error -> _error.postValue(result.exception.message)
             }
         }
     }
 
     /**
-     * This function will fetch all the countries name from the rawData
+     * This function will fetch all the countries name from the rawRateData
      * */
     fun fetchAllCountries(): LiveData<List<String>> {
         val allCountryLiveData = MutableLiveData<List<String>>()
-        allCountryLiveData.value = Calculate.countryList(rawData.value!!)
+        allCountryLiveData.value = Calculate.getCountryList(rawRateData.value!!)
         return allCountryLiveData
     }
 
@@ -101,11 +105,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
      * @param country
      * */
     fun getPeriodsRateByCountry(country: String): List<Pair<RatesEnum, Double>> {
-        return Calculate.getPeriodsRateByCountry(rawData.value!!, country)
+        return Calculate.getRatesTypeByCountry(rawRateData.value!!, country)
     }
 
     /**
-     * This is a 'onClick' function to reset the value of 'Excluding Vat Amount'
+     * This is a 'onClick' function to reset the value into '0' of 'Excluding VAT Amount'
      * */
     fun reset() {
         exclVatAmount.value = "0"
@@ -115,14 +119,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
      * This is a 'onClick' function to retry fetching data from the server
      * */
     fun retry() {
-        getRawData()
+        getRawRateData()
     }
 
     /**
      * during creating the viewModel, it will fetch the data or error messages
      * */
     init {
-        getRawData()
+        getRawRateData()
     }
 
     /**

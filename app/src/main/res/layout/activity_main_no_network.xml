@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/button_font_size"
-            android:text="@string/retry"
+            android:text="@string/button_retry"
             android:onClick="@{() -> viewModel.retry()}"
             android:backgroundTint="@color/colorPrimaryDark"
             app:layout_constraintEnd_toEndOf="@+id/textView" app:layout_constraintStart_toStartOf="@+id/textView"
