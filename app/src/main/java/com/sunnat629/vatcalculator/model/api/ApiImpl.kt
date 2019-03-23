@@ -1,4 +1,4 @@
-package com.sunnat629.vatcalculator.model
+package com.sunnat629.vatcalculator.model.api
 
 import android.util.Log
 import com.sunnat629.vatcalculator.model.entities.Rate

@@ -1,12 +1,8 @@
-package com.sunnat629.vatcalculator
+package com.sunnat629.vatcalculator.ui
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
@@ -20,25 +16,38 @@ import androidx.lifecycle.ViewModelProviders
 import com.sunnat629.vatcalculator.databinding.ActivityMainBinding
 import com.sunnat629.vatcalculator.databinding.ActivityMainNoNetworkBinding
 import com.sunnat629.vatcalculator.model.RatesEnum
+import com.sunnat629.vatcalculator.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.jetbrains.anko.toast
+
 
 
 class MainActivity : AppCompatActivity() {
-
-
     private lateinit var mainViewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setSupportActionBar(toolbar)
 
+        // access the viewModel to control the UI
         mainViewModel = ViewModelProviders.of(this)
             .get(MainViewModel::class.java)
 
+        fetchRawDataOrHandleNetwork()
+
+    }
+
+    /**
+     * If there is no problem during fetch the data, then it will go with @rawData
+     * or, if there is no internet connectivity or any other error, it will go with @error
+     * */
+    private fun fetchRawDataOrHandleNetwork() {
         mainViewModel.rawData.observe(this@MainActivity, Observer {
-            DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+            DataBindingUtil.setContentView<ActivityMainBinding>(this,
+                com.sunnat629.vatcalculator.R.layout.activity_main
+            )
                 .apply {
                     this.lifecycleOwner = this@MainActivity
                     this.viewModel = mainViewModel
@@ -47,7 +56,9 @@ class MainActivity : AppCompatActivity() {
         })
 
         mainViewModel.error.observe(this@MainActivity, Observer {
-            DataBindingUtil.setContentView<ActivityMainNoNetworkBinding>(this, R.layout.activity_main_no_network)
+            DataBindingUtil.setContentView<ActivityMainNoNetworkBinding>(this,
+                com.sunnat629.vatcalculator.R.layout.activity_main_no_network
+            )
                 .apply {
                     this.lifecycleOwner = this@MainActivity
                     this.viewModel = mainViewModel
@@ -57,7 +68,6 @@ class MainActivity : AppCompatActivity() {
 
     // set Country in spinner
     private fun setSpinner() {
-
         GlobalScope.launch(Dispatchers.Main) {
             // country is in observation if it changes or not
             mainViewModel.fetchAllCountries().observe(this@MainActivity, Observer {
@@ -71,7 +81,6 @@ class MainActivity : AppCompatActivity() {
                     GlobalScope.launch(Dispatchers.Main) {
                         val country = mainViewModel.fetchAllCountries().value?.get(position)
                         country?.let { getOneRate(it) }
-                        toast(country.toString())
                     }
                 }
 
@@ -102,7 +111,7 @@ class MainActivity : AppCompatActivity() {
                     LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
                 myRadioButton.text = this.getString(
-                    R.string.vat_rate,
+                    com.sunnat629.vatcalculator.R.string.vat_rate,
                     rates[radioButton].second.toString(),
                     rates[radioButton].first.toString().toLowerCase()
                 )

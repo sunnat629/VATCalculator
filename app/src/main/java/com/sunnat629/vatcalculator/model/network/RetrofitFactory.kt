@@ -1,7 +1,7 @@
 package com.sunnat629.vatcalculator.model.network
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import com.sunnat629.vatcalculator.model.Api
+import com.sunnat629.vatcalculator.model.api.Api
 import com.sunnat629.vatcalculator.utils.Constance.BASE_URL
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

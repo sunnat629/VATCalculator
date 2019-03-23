@@ -1,7 +1,6 @@
-package com.sunnat629.vatcalculator
+package com.sunnat629.vatcalculator.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.databinding.Bindable
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -11,7 +10,6 @@ import com.sunnat629.vatcalculator.model.RatesEnum
 import com.sunnat629.vatcalculator.model.entities.Rate
 import com.sunnat629.vatcalculator.model.network.NetworkResult
 import com.sunnat629.vatcalculator.utils.Calculate
-import com.sunnat629.vatcalculator.utils.Constance
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 

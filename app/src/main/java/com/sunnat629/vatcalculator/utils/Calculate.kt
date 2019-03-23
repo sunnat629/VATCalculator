@@ -1,10 +1,8 @@
 package com.sunnat629.vatcalculator.utils
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.sunnat629.vatcalculator.model.Api
-import com.sunnat629.vatcalculator.model.ApiImpl
+import com.sunnat629.vatcalculator.model.api.ApiImpl
 import com.sunnat629.vatcalculator.model.RatesEnum
 import com.sunnat629.vatcalculator.model.entities.Period
 import com.sunnat629.vatcalculator.model.entities.Rate

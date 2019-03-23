@@ -2,5 +2,5 @@
 <resources>
     <dimen name="no_net_image_size">300dp</dimen>
     <dimen name="button_font_size">22sp</dimen>
-
+    <dimen name="font_size">22sp</dimen>
 </resources>
