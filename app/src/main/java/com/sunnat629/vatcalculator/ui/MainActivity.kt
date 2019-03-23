@@ -18,6 +18,7 @@ import com.sunnat629.vatcalculator.databinding.ActivityMainNoNetworkBinding
 import com.sunnat629.vatcalculator.model.RatesEnum
 import com.sunnat629.vatcalculator.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.layout_toolbar.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
