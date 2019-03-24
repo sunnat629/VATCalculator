@@ -112,14 +112,14 @@ class MainViewModel : ViewModel() {
      * This is a 'onClick' function to reset the value into '0' of 'Excluding VAT Amount'
      * */
     fun reset() {
-        exclVatAmount.value = "0"
+        scope.launch { exclVatAmount.value = "0" }
     }
 
     /**
      * This is a 'onClick' function to retry fetching data from the server
      * */
     fun retry() {
-        getRawRateData()
+        scope.launch { getRawRateData() }
     }
 
     /**

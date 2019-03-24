@@ -31,9 +31,9 @@ object RetrofitFactory {
     private fun makeOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(makeLoggingInterceptor())
-            .connectTimeout(60, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(15, TimeUnit.SECONDS)
+            .connectTimeout(20, TimeUnit.SECONDS)
+            .readTimeout(15, TimeUnit.SECONDS)
+            .writeTimeout(10, TimeUnit.SECONDS)
             .build()
     }
 

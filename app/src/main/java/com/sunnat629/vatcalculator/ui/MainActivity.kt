@@ -3,6 +3,7 @@ package com.sunnat629.vatcalculator.ui
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
@@ -15,8 +16,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.sunnat629.vatcalculator.R
+import com.sunnat629.vatcalculator.databinding.ActivityMainBinding
 import com.sunnat629.vatcalculator.databinding.ActivityMainFetchingBinding
+import com.sunnat629.vatcalculator.databinding.ActivityMainNoNetworkBinding
 import com.sunnat629.vatcalculator.model.RatesEnum
+import com.sunnat629.vatcalculator.utils.Constance.TAG_MAIN_ACTIVITY
 import com.sunnat629.vatcalculator.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main_fetching.*
@@ -24,6 +28,7 @@ import kotlinx.android.synthetic.main.layout_toolbar.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.jetbrains.anko.toast
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mainViewModel: MainViewModel
@@ -41,48 +46,54 @@ class MainActivity : AppCompatActivity() {
         mainViewModel = ViewModelProviders.of(this)
             .get(MainViewModel::class.java)
 
+        setFetchingImage()
+        fetchRawRateDataOrHandleNetwork()
+    }
+
+
+    /**
+     * To load the GIF
+     * */
+    private fun setFetchingImage() {
         Glide.with(this).load(resources.getDrawable(R.drawable.fetching, null)).into(fetchingImage)
-
-//        fetchRawRateDataOrHandleNetwork()
-
     }
 
     /**
      * If there is no problem during fetch the data, then it will go with @rawRateData
      * or, if there is no internet connectivity or any other error, it will go with @error
      * */
-//    private fun fetchRawRateDataOrHandleNetwork() {
-//        // When the fetched data is completed then it will start to observe this 'rawRateData' and bind with the 'activity_main layout' and 'mainViewModel'
-//        mainViewModel.rawRateData.observe(this@MainActivity, Observer {
-//            DataBindingUtil.setContentView<ActivityMainBinding>(
-//                this,
-//                com.sunnat629.vatcalculator.R.layout.activity_main
-//            )
-//                .apply {
-//                    this.lifecycleOwner = this@MainActivity
-//                    this.viewModel = mainViewModel
-//                }
-//
-//            Log.i(TAG_MAIN_ACTIVITY, resources.getString(R.string.successful))
-//            mainViewModel.exclVatAmount.value = resources.getString(R.string.reset_value)
-//            setSpinner()
-//        })
-//
-//        // When the fetched data is completed then it will start to observe this 'error' and bind with the 'activity_main_no_network' layout and 'mainViewModel'
-//        mainViewModel.error.observe(this@MainActivity, Observer {
-//            DataBindingUtil.setContentView<ActivityMainNoNetworkBinding>(
-//                this,
-//                com.sunnat629.vatcalculator.R.layout.activity_main_no_network
-//            )
-//                .apply {
-//                    this.lifecycleOwner = this@MainActivity
-//                    this.viewModel = mainViewModel
-//                }
-//            Log.e(TAG_MAIN_ACTIVITY, resources.getString(R.string.error))
-//            toast(resources.getString(R.string.error))
-//
-//        })
-//    }
+    private fun fetchRawRateDataOrHandleNetwork() {
+        // When the fetched data is completed then it will start to observe this 'rawRateData' and bind with the 'activity_main layout' and 'mainViewModel'
+        mainViewModel.rawRateData.observe(this@MainActivity, Observer {
+            DataBindingUtil.setContentView<ActivityMainBinding>(
+                this,
+                R.layout.activity_main
+            )
+                .apply {
+                    this.lifecycleOwner = this@MainActivity
+                    this.viewModel = mainViewModel
+                }
+
+            Log.i(TAG_MAIN_ACTIVITY, resources.getString(R.string.successful))
+            mainViewModel.exclVatAmount.value = resources.getString(R.string.reset_value)
+            setSpinner()
+        })
+
+        // When the fetched data is completed then it will start to observe this 'error' and bind with the 'activity_main_no_network' layout and 'mainViewModel'
+        mainViewModel.error.observe(this@MainActivity, Observer {
+            DataBindingUtil.setContentView<ActivityMainNoNetworkBinding>(
+                this,
+                com.sunnat629.vatcalculator.R.layout.activity_main_no_network
+            )
+                .apply {
+                    this.lifecycleOwner = this@MainActivity
+                    this.viewModel = mainViewModel
+                }
+            Log.e(TAG_MAIN_ACTIVITY, resources.getString(R.string.error))
+            toast(resources.getString(R.string.error_short))
+
+        })
+    }
 
     /**
      * Set Country in spinner and 'launch' is suspending block
@@ -92,7 +103,7 @@ class MainActivity : AppCompatActivity() {
         GlobalScope.launch(Dispatchers.Main) {
             // country is in observation if it changes or not
             mainViewModel.fetchAllCountries().observe(this@MainActivity, Observer {
-                val adapter = ArrayAdapter(this@MainActivity, android.R.layout.simple_spinner_item, it)
+                val adapter = ArrayAdapter(this@MainActivity, R.layout.spinner_text, it)
                 countrySpinner.adapter = adapter
             })
 

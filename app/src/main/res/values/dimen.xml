@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="no_net_image_size">250dp</dimen>
+    <dimen name="fetching_image_size">200dp</dimen>
     <dimen name="button_font_size">18sp</dimen>
     <dimen name="font_size">18sp</dimen>
+    <dimen name="spinner_font_size">15sp</dimen>
 </resources>

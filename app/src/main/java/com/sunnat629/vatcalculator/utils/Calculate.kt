@@ -79,6 +79,8 @@ object Calculate {
         val output = MutableLiveData<String>()
         if (isAppStart(inputVat, exclVatAmount)) {
             output.value = (inputVat.value!!.toDouble() + exclVatAmount?.value!!.toDouble()).toString()
+        } else {
+            output.value = "0"
         }
         return output
     }
@@ -91,7 +93,9 @@ object Calculate {
     fun getVatByAmount(inputVat: MutableLiveData<String>?, exclVatAmount: MutableLiveData<String>?): LiveData<String> {
         val output = MutableLiveData<String>()
         if (isAppStart(inputVat!!, exclVatAmount)) {
-            output.value = ((inputVat.value!!.toDouble() * exclVatAmount?.value!!.toDouble()) / 100).toString()
+            output.value = ((inputVat.value!!.toDouble() * exclVatAmount?.value!!.toDouble() / 100)).toString()
+        } else {
+            output.value = "0"
         }
         return output
     }

@@ -21,5 +21,8 @@
     <string name="error">There is an error during fetch the data. Please check the internet connectivity and try
         again.
     </string>
-    <string name="fetching_data">Fetching Data...</string>
+    <string name="fetching_data">Fetching Data…</string>
+    <string name="error_short">Please check the internet connectivity and try
+        again.
+    </string>
 </resources>
