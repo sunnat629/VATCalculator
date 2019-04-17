@@ -1,5 +1,7 @@
 # VAT Calculator
 
+#### A sample app using all the latest tech of Android
+
 [jsonvat](https://jsonvat.com/) is a json of VAT converting in various tax tips of Europe countries. I have developed an app which calculates the currency based on the given country list. You can select any country from the dropdown list. I have developed this app with a combination of all the Android Architecture Components and latest technologies. 
 
 ### App Layout Flow – 
