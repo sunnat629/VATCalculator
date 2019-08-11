@@ -70,6 +70,11 @@ data class Rates(
     var parking: Double
 ) {
     override fun toString(): String {
-        return "Rates(superReduced=$super_reduced, reduced=$reduced, standard=$standard, reduced1=$reduced1, reduced2=$reduced2, parking=$parking)"
+        return "Rates(superReduced=$super_reduced, " +
+                "reduced=$reduced, " +
+                "standard=$standard," +
+                "reduced1=$reduced1, " +
+                "reduced2=$reduced2, " +
+                "parking=$parking)"
     }
 }

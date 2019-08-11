@@ -4,7 +4,7 @@ import android.util.Log
 import com.sunnat629.vatcalculator.model.entities.Rate
 import com.sunnat629.vatcalculator.model.network.NetworkResult
 import com.sunnat629.vatcalculator.model.network.RetrofitFactory
-import com.sunnat629.vatcalculator.utils.Constance.TAG_API_IMPL
+import com.sunnat629.vatcalculator.utils.DeclareConstant.TAG_API_IMPL
 import java.io.IOException
 
 /**
