@@ -3,7 +3,7 @@ package com.sunnat629.vatcalculator.utils
 /**
  * Here we have kept some constant Strings to use in our app
  * */
-object Constance {
+object DeclareConstant {
     const val BASE_URL = "https://jsonvat.com/"
     const val GET_ENDPOINT_RAW_DATA = "\"/\""
 

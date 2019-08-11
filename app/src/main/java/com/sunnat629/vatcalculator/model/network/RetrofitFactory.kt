@@ -2,7 +2,7 @@ package com.sunnat629.vatcalculator.model.network
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.sunnat629.vatcalculator.model.api.Api
-import com.sunnat629.vatcalculator.utils.Constance.BASE_URL
+import com.sunnat629.vatcalculator.utils.DeclareConstant.BASE_URL
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -18,9 +18,7 @@ object RetrofitFactory {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(makeOkHttpClient())
-            //  GsonConverterFactory, which is going to map the JSON data.
             .addConverterFactory(GsonConverterFactory.create())
-            // CoroutineCallAdapterFactory is a call adapter of kotlin coroutines when building a Retrofit instance.
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build().create(Api::class.java)
     }

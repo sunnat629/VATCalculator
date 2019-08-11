@@ -20,7 +20,7 @@ import com.sunnat629.vatcalculator.databinding.ActivityMainBinding
 import com.sunnat629.vatcalculator.databinding.ActivityMainFetchingBinding
 import com.sunnat629.vatcalculator.databinding.ActivityMainNoNetworkBinding
 import com.sunnat629.vatcalculator.model.RatesEnum
-import com.sunnat629.vatcalculator.utils.Constance.TAG_MAIN_ACTIVITY
+import com.sunnat629.vatcalculator.utils.DeclareConstant.TAG_MAIN_ACTIVITY
 import com.sunnat629.vatcalculator.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main_fetching.*
@@ -39,10 +39,9 @@ class MainActivity : AppCompatActivity() {
 
         DataBindingUtil.setContentView<ActivityMainFetchingBinding>(
             this,
-            com.sunnat629.vatcalculator.R.layout.activity_main_fetching
+            R.layout.activity_main_fetching
         )
 
-        // access the viewModel to control the UI
         mainViewModel = ViewModelProviders.of(this)
             .get(MainViewModel::class.java)
 

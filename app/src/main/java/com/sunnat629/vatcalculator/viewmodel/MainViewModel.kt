@@ -20,14 +20,11 @@ import kotlin.coroutines.CoroutineContext
  * */
 class MainViewModel : ViewModel() {
 
-    // Creating the Job variable
     private var parentJob = Job()
 
-    // Creating the CoroutineContext variable and it uses the parentJob and the main dispatcher
     private val coroutineContext: CoroutineContext
         get() = parentJob + Dispatchers.Main
 
-    // Creating the CoroutineScope variable based on coroutineContext
     private val scope = CoroutineScope(coroutineContext)
 
     /**

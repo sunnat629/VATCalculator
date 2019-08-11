@@ -1,7 +1,7 @@
 package com.sunnat629.vatcalculator.model.api
 
 import com.sunnat629.vatcalculator.model.entities.JSonVAT
-import com.sunnat629.vatcalculator.utils.Constance.GET_ENDPOINT_RAW_DATA
+import com.sunnat629.vatcalculator.utils.DeclareConstant.GET_ENDPOINT_RAW_DATA
 import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import retrofit2.http.GET
