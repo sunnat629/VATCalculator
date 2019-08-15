@@ -9,10 +9,7 @@ import com.sunnat629.vatcalculator.model.RatesEnum
 import com.sunnat629.vatcalculator.model.entities.Rate
 import com.sunnat629.vatcalculator.model.network.NetworkResult
 import com.sunnat629.vatcalculator.utils.Calculate
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -20,10 +17,8 @@ import kotlin.coroutines.CoroutineContext
  * */
 class MainViewModel : ViewModel() {
 
-    private var parentJob = Job()
-
     private val coroutineContext: CoroutineContext
-        get() = parentJob + Dispatchers.Main
+        get() = Dispatchers.Main
 
     private val scope = CoroutineScope(coroutineContext)
 
@@ -79,7 +74,7 @@ class MainViewModel : ViewModel() {
      * Or, if there is any error, it will post the error message to '_error'
      * */
     private fun getRawRateData() {
-        parentJob = scope.launch {
+        scope.launch {
             val result = Calculate.fetchRateData()
             when (result) {
                 is NetworkResult.Success -> _rawRateData.postValue(result.data)
@@ -131,6 +126,6 @@ class MainViewModel : ViewModel() {
      * */
     override fun onCleared() {
         super.onCleared()
-        parentJob.cancel()
+        scope.cancel()
     }
 }
